@@ -3,11 +3,11 @@
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*
-* C Include:        %template.h%
+* C Include:        LINFLEX.h
 * Instance:         RPL_1
-* %version:         1.2
+* %version:         1.0
 * %created_by:      Misael Alvarez Domínguez
-* %date_created:    Monday, July 13, 2015
+* %date_created:    Tuesday, August 11, 2015
 *=============================================================================*/
 /* DESCRIPTION : Header file template                                         */
 /*============================================================================*/
@@ -19,17 +19,16 @@
 /*============================================================================*/
 /*  REVISION |   DATE      |                               |      AUTHOR      */
 /*----------------------------------------------------------------------------*/
-/*  1.0      | DD/MM/YYYY  | SAR/SIF/SCN_xxx               | Mr. Template     */
-/*  1.1      | 13/07/2015  |H file template implementation | Misael AD        */
-/*  1.2      | 10/11/2015  |UART init function added       | Misael AD        */
+/*  1.0      | 11/08/2015  | LINFLEX driver                | Misael AD        */
 /*============================================================================*/
 
-#ifndef INIT_H                               /* To avoid double inclusion */
-#define INIT_H
+#ifndef LINFLEX_H                               /* To avoid double inclusion */
+#define LINFLEX_H
 
 /* Includes */
 /* -------- */
-#include "MPC5606B.h"
+#include "typedefs.h"
+#include "LIN_signals.h"
 
 /* Exported types and constants */
 /* ---------------------------- */
@@ -69,12 +68,10 @@
 
 /* Exported functions prototypes and macros */
 /* ---------------------------------------- */
-void init_disableWatchdog(void);
-void init_OnBoardLEDs(void);
-void init_OnBoardPushButtons(void);
-void init_LEDBar(void);
-void init_UART(int baud);
-
+void InitLinFlex0Slave(T_UWORD baud);
+void LINFlex_0_RX_ISR(void);
+void LINFlex_0_TX_ISR(void);
+void IntcInterruptLINFLEXHandlers(void);
 
 /* Functions prototypes */
 
@@ -86,4 +83,5 @@ void init_UART(int baud);
 
 
 #endif
+
 

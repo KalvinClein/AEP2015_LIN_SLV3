@@ -1,14 +1,16 @@
 
-/** GPIO funtion prototypes  */
+/* Includes  */
 #include	"init.h"
 #include    "PIT.h"
 #include    "SchM.h"
 #include    "SchM_Cfg.h"
+#include	"LINFLEX.h"
+#include	"LED.h"
 
 /*****************************************************************************************************
 * Definition of module wide VARIABLEs 
 *****************************************************************************************************/
-
+int data;
 /****************************************************************************************************
 * Declaration of module wide FUNCTIONs 
 *****************************************************************************************************/
@@ -16,7 +18,7 @@
 /*****************************************************************************************************
 * Definition of global wide MACROs / #DEFINE-CONSTANTs
 *****************************************************************************************************/
-
+#define S1 SIU.GPDI[64].R
 /*****************************************************************************************************
 * Declaration of module wide TYPEs 
 *****************************************************************************************************/
@@ -34,6 +36,7 @@ void main(void)
 
 {
 	initModesAndClock();
+	initPeriClkGen();
 	
 	/* Disable Watchdog */
 	init_disableWatchdog();
@@ -44,19 +47,30 @@ void main(void)
 	/*Initialize the On-Board push buttons*/
 	init_OnBoardPushButtons();
 	
-	/*Initialize external LED bar pins*/
-	init_LEDBar();
-	
 	/*Initialize Interrupts */
 	INTC_InitINTCInterrupts();
 	/*Initialize Exception Handlers */
 	EXCEP_InitExceptionHandlers();
+    
+    IntcInterruptLINFLEXHandlers();
+    
+    InitLinFlex0Slave(9600);
+    
+    LED_Off(LED1);
+    LED_Off(LED2);
+    LED_Off(LED3);
+    LED_Off(LED4);
     
     /*Initialize scheduler*/	
     SchM_Init(&SchConfig);
     
     /*Hand control to the scheduler*/
     SchM_Start();
+    
+    for(;;)
+    {
+    	
+    }
 }
 
 /*~~~~~~~ End of Main Code ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

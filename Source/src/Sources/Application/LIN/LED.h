@@ -68,11 +68,8 @@
 
 /* Exported functions prototypes and macros */
 /* ---------------------------------------- */
-void LED_WindowLifter(int8_t position);
-void LED_UP(void);
-void LED_DOWN(void);
-void LEDs_Off(void);
-
+void LED_Off(T_UWORD pin);
+void LED_On(T_UWORD pin);
 void LED_T(T_UWORD pin);
 
 /* Functions prototypes */
