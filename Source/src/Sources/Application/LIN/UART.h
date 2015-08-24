@@ -5,9 +5,9 @@
 /*============================================================================*
 * C Include:        %template.h%
 * Instance:         RPL_1
-* %version:         1.2
+* %version:         1.0
 * %created_by:      Misael Alvarez Domínguez
-* %date_created:    Monday, July 13, 2015
+* %date_created:    Monday, August 11, 2015
 *=============================================================================*/
 /* DESCRIPTION : Header file template                                         */
 /*============================================================================*/
@@ -19,17 +19,15 @@
 /*============================================================================*/
 /*  REVISION |   DATE      |                               |      AUTHOR      */
 /*----------------------------------------------------------------------------*/
-/*  1.0      | DD/MM/YYYY  | SAR/SIF/SCN_xxx               | Mr. Template     */
-/*  1.1      | 13/07/2015  |H file template implementation | Misael AD        */
-/*  1.2      | 10/11/2015  |UART init function added       | Misael AD        */
+/*  1.1      | 10/08/2015  | UART driver                   | Misael AD        */
 /*============================================================================*/
 
-#ifndef INIT_H                               /* To avoid double inclusion */
-#define INIT_H
+#ifndef UART_H                               /* To avoid double inclusion */
+#define UART_H
 
 /* Includes */
 /* -------- */
-#include "MPC5606B.h"
+
 
 /* Exported types and constants */
 /* ---------------------------- */
@@ -69,13 +67,8 @@
 
 /* Exported functions prototypes and macros */
 /* ---------------------------------------- */
-void init_disableWatchdog(void);
-void init_OnBoardLEDs(void);
-void init_OnBoardPushButtons(void);
-void init_LEDBar(void);
-void init_UART(int baud);
-
-
+void UART_Tx(int data);
+int UART_Rx(void);
 /* Functions prototypes */
 
 
@@ -83,7 +76,10 @@ void init_UART(int baud);
 
 
 /* Exported defines */
-
+#define RX_DONE	LINFLEX_0.UARTSR.B.DRF
+#define TX_DONE LINFLEX_0.UARTSR.B.DTF
+#define UART_SR LINFLEX_0.UARTSR.R
 
 #endif
+
 

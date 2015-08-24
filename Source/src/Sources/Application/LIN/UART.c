@@ -3,29 +3,28 @@
 /*============================================================================*/
 /*                        OBJECT SPECIFICATION                                */
 /*============================================================================*
-* C Source:         LED.c
+* C Source:         %template.c%
 * Instance:         RPL_1
-* %version:         1.1
+* %version:         1.0
 * %created_by:      Misael Alvarez Domínguez
-* %date_created:    Monday, July 13, 2015
+* %date_created:    Monday, August 11, 2015
 *=============================================================================*/
 /* DESCRIPTION : C source template file                                       */
 /*============================================================================*/
-/* FUNCTION COMMENT : This file describes the external LED control functions  */
-/*                                                                            */
+/* FUNCTION COMMENT : This file describes the C source template according to  */
+/* the new software platform                                                  */
 /*                                                                            */
 /*============================================================================*/
 /*                               OBJECT HISTORY                               */
 /*============================================================================*/
 /*  REVISION |   DATE      |                               |      AUTHOR      */
 /*----------------------------------------------------------------------------*/
-/*  1.0      | DD/MM/YYYY  |                               | Mr. Template     */
-/*  1.1      | 13/07/2015  |C file template implementation | Misael AD        */
+/*  1.0      | 11/08/2015  |UART driver                    | Misael AD        */
 /*============================================================================*/
 
 /* Includes */
 /* -------- */
-#include "LED.h"
+#include "UART.h"
 #include "MPC5606B.h"
 
 /* Functions macros, constants, types and datas         */
@@ -63,13 +62,6 @@
 
 /* Private defines */
 
-#define LEDB SIU.GPDO[10].R
-#define LEDG SIU.GPDO[11].R
-
-	/* On-board LED states */
-#define HIGH  0
-#define LOW	  1
-
 
 /* Private functions prototypes */
 /* ---------------------------- */
@@ -78,7 +70,6 @@
 
 /* Exported functions prototypes */
 /* ----------------------------- */
-
 
 /* Inline functions */
 /* ---------------- */
@@ -104,39 +95,19 @@
 
 /* Exported functions */
 /* ------------------ */
-
 /**************************************************************
- *  Name                 :	LED_Off
- *  Description          :	Turns off indicated LED
- *  Parameters           :	None
+ *  Name                 :	export_func
+ *  Description          :
+ *  Parameters           :  [Input, Output, Input / output]
  *  Return               :
- *  Critical/explanation :	No
+ *  Critical/explanation :    [yes / No]
  **************************************************************/
-void LED_Off(T_UWORD pin)
-{	
-	SIU.GPDO[pin].R = LOW;
-}
-
-/**************************************************************
- *  Name                 :	LED_On
- *  Description          :	Turns on indicated LED
- *  Parameters           :	None
- *  Return               :
- *  Critical/explanation :	No
- **************************************************************/
-void LED_On(T_UWORD pin)
-{	
-	SIU.GPDO[pin].R = HIGH;
-}
-
-/**************************************************************
- *  Name                 :	LED_T
- *  Description          :	Toggles indicated LED
- *  Parameters           :	None
- *  Return               :
- *  Critical/explanation :	No
- **************************************************************/
-void LED_T(T_UWORD pin)
+void UART_Tx(int data)
 {
-	SIU.GPDO[pin].R ^= 1;
+	LINFLEX_0.BDRL.B.DATA0 = data;
+}
+
+int UART_Rx(void)
+{
+	return LINFLEX_0.BDRM.B.DATA4;
 }

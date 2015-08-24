@@ -27,8 +27,11 @@
 
 /* Includes */
 /* -------- */
+#include "MPC5606B.h"
+
 #include "SchM_Tasks.h"
 #include "SchM_Types.h"
+#include "LIN_SLV_3.h"
 
 /* Functions macros, constants, types and datas         */
 /* ---------------------------------------------------- */
@@ -143,7 +146,13 @@ void SchM_Task10ms(void)
  **************************************************************/
 void SchM_Task20ms(void)
 {
-	
+	static T_UBYTE lub_LEDcounter;
+	lub_LEDcounter++;
+	if(lub_LEDcounter >= TICKS(5))
+	{
+		LIN_LED();
+		lub_LEDcounter = 0;
+	}
 }
 
 /**************************************************************
@@ -155,5 +164,5 @@ void SchM_Task20ms(void)
  **************************************************************/
 void SchM_Task40ms(void)
 {
-	
+	LIN_Slave();
 }

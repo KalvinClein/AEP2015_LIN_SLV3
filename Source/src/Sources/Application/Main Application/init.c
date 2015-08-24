@@ -5,7 +5,7 @@
 /*============================================================================*
 * C Source:         init.c
 * Instance:         RPL_1
-* %version:         1.2
+* %version:         1.3
 * %created_by:      Misael Alvarez Domínguez
 * %date_created:    Monday, July 13, 2015
 *=============================================================================*/
@@ -22,6 +22,7 @@
 /*  1.0      | DD/MM/YYYY  |                               | Mr. Template     */
 /*  1.1      | 13/07/2015  |C file template implementation | Misael AD        */
 /*  1.2      | 22/07/2015  |MISRA issues fixed			   | Misael AD        */
+/*  1.3      | 10/11/2015  |UART init function added       | Misael AD        */
 /*============================================================================*/
 
 /* Includes */
@@ -65,6 +66,8 @@
 #define Output (uint16_t)0x200	/*PCR_GPIO_OutputConfiguration*/
 #define Input  (uint16_t)0x100	/*PCR_GPIO_InputConfiguration*/
 #define Analog (uint16_t)0x2000	/*PCR_AnalogConfiguration*/
+#define SCI_Rx 0x103	/*PCR as SCI*/
+#define SCI_Tx 0x400	/*PCR as SCI*/
 
 	/* Push buttons */
 #define PortE0 SIU.PCR[64].R
@@ -77,6 +80,10 @@
 #define PortE5 SIU.PCR[69].R 
 #define PortE6 SIU.PCR[70].R 
 #define PortE7 SIU.PCR[71].R
+
+	/* UART */
+#define PortB2 SIU.PCR[18].R
+#define PortB3 SIU.PCR[19].R
 
 /* Private functions prototypes */
 /* ---------------------------- */
@@ -119,9 +126,9 @@
  **************************************************************/
 void init_disableWatchdog(void) 
 {
-  SWT.SR.R = 0x0000C520u;     /* Write keys to clear soft lock bit */
+  SWT.SR.R = 0x0000C520u;	/* Write keys to clear soft lock bit */
   SWT.SR.R = 0x0000D928u; 
-  SWT.CR.R = 0x8000010Au;     /* Clear watchdog enable (WEN) */
+  SWT.CR.R = 0x8000010Au;   /* Clear watchdog enable (WEN) */
 }
 
 /**************************************************************
@@ -170,3 +177,27 @@ void init_LEDBar(void)
 	}
 }
 
+/**************************************************************
+ *  Name                 :	init_UART
+ *  Description          :	Initialize UART module
+ *  Parameters           :	None
+ *  Return               :
+ *  Critical/explanation :	No
+ **************************************************************/
+void init_UART(int baud)
+{
+	LINFLEX_0.LINCR1.R = 0x0081;
+	while(LINFLEX_0.LINSR.B.LINS == !1)
+	{
+		/*Wait for LIN INIT mode*/
+	}
+	LINFLEX_0.UARTCR.R  = 0x01;	 /*Enable UART mode*/
+	PortB2 = SCI_Tx;	/*Pin config as Tx*/
+	PortB3 = SCI_Rx;	/*Pin config as Rx*/
+	LINFLEX_0.UARTCR.R  = 0x33;	 /*UART configuration*/
+	LINFLEX_0.LINIBRR.R = 16000000/(16*baud);/*BaudRate integer*/
+	LINFLEX_0.LINFBRR.R = (16*(16000000%(16*baud)))/(16*baud);/*BaudRate float*/
+	LINFLEX_0.UARTSR.B.DRF = 1;
+	LINFLEX_0.UARTSR.B.DTF = 1;
+	LINFLEX_0.LINCR1.R  = 0x0080;/*Normal Mode*/
+}
